@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Algoritmo de Multiplicador Constante</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1>Algoritmo de Multiplicador Constante</h1>
+    <label for="semilla">Semilla (separada por comas):</label>
+    <input type="text" id="semilla"><br><br>
+    <label for="constante">Constante (separada por comas):</label>
+    <input type="text" id="constante"><br><br>
+    <label for="interacciones">Número de interacciones:</label>
+    <input type="text" id="interacciones"><br><br>
+    <button onclick="calcularMultiplicadorConstante()">Calcular</button><br><br>
+    <div id="resultados"></div>
+
+    <script>
+        function calcularMultiplicadorConstante() {
+            const semillaInput = document.getElementById("semilla").value;
+            const constanteInput = document.getElementById("constante").value;
+            const interacciones = parseInt(document.getElementById("interacciones").value);
+
+            if (isNaN(interacciones)) {
+                alert("Por favor ingrese un número de interacciones válido");
+                return;
+            }
+
+            const semillaArray = semillaInput.split(",").map(Number);
+            const constanteArray = constanteInput.split(",").map(Number);
+            let semilla = parseInt(semillaArray.join(""));
+            const constante = parseInt(constanteArray.join(""));
+            let resultados = "<table><tr><th>Y</th><th>=</th><th>X</th><th>R</th></tr>";
+            const longitudSemilla = semillaArray.length;
+
+            let valorAnterior = semilla;
+
+            for (let i = 0; i < interacciones; i++) {
+                let y = constante * valorAnterior;
+                let yStr = y.toString();
+
+                // Agregar cero a la izquierda si la longitud es impar
+                if (yStr.length % 2 !== 0) {
+                    yStr = "0" + yStr;
+                }
+
+                const digitosMedios = yStr.slice(yStr.length / 2 - longitudSemilla / 2, yStr.length / 2 + longitudSemilla / 2);
+                const r = "0." + digitosMedios;
+
+                let constanteStr = constante.toString();
+                let valorAnteriorStr = valorAnterior.toString();
+                if (constanteStr.length < longitudSemilla) {
+                    constanteStr = "0".repeat(longitudSemilla - constanteStr.length) + constanteStr;
+                }
+                if (valorAnteriorStr.length < longitudSemilla) {
+                    valorAnteriorStr = "0".repeat(longitudSemilla - valorAnteriorStr.length) + valorAnteriorStr;
+                }
+
+                resultados += `<tr><td>y${i} = (${constanteStr})(${valorAnteriorStr})</td><td>${yStr}</td><td>x${i + 1} = ${digitosMedios}</td><td>r${i + 1} = ${r}</td></tr>`;
+
+                valorAnterior = parseInt(digitosMedios);
+            }
+
+            resultados += "</table>";
+            document.getElementById("resultados").innerHTML = resultados;
+        }
+    </script>
+</body>
+</html>

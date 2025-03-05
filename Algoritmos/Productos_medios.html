@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Algoritmo de Productos Medios</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1>Algoritmo de Productos Medios</h1>
+    <label for="semilla1">Semilla 1 (separada por comas):</label>
+    <input type="text" id="semilla1"><br><br>
+    <label for="semilla2">Semilla 2 (separada por comas):</label>
+    <input type="text" id="semilla2"><br><br>
+    <label for="interacciones">Número de interacciones:</label>
+    <input type="text" id="interacciones"><br><br>
+    <button onclick="calcularProductosMedios()">Calcular</button><br><br>
+    <div id="resultados"></div>
+
+    <script>
+        function calcularProductosMedios() {
+            const semilla1Input = document.getElementById("semilla1").value;
+            const semilla2Input = document.getElementById("semilla2").value;
+            const interacciones = parseInt(document.getElementById("interacciones").value);
+
+
+            if (isNaN(interacciones)) {
+                alert("Por favor ingrese un número de interacciones válido");
+                return;
+            }
+
+            const x0Array = semilla1Input.split(",").map(Number);
+            const x1Array = semilla2Input.split(",").map(Number);
+            let x0 = parseInt(x0Array.join(""));
+            let x1 = parseInt(x1Array.join(""));
+            let resultados = "<table><tr><th>Y</th><th>=</th><th>X</th><th>R</th></tr>";
+            const longitudSemilla = x0Array.length;
+
+            for (let i = 0; i < interacciones; i++) {
+                let y = x0 * x1;
+                let yStr = y.toString();
+
+                if (yStr.length % 2 !== 0) {
+                    yStr = "0" + yStr;
+                }
+
+                const digitosMedios = yStr.slice(yStr.length / 2 - longitudSemilla / 2, yStr.length / 2 + longitudSemilla / 2);
+                const r = "0." + digitosMedios;
+
+                let x0Str = x0.toString();
+                let x1Str = x1.toString();
+                if (x0Str.length < longitudSemilla) {
+                    x0Str = "0".repeat(longitudSemilla - x0Str.length) + x0Str;
+                }
+                if (x1Str.length < longitudSemilla) {
+                    x1Str = "0".repeat(longitudSemilla - x1Str.length) + x1Str;
+                }
+
+                resultados += `<tr><td>y${i} = (${x0Str})(${x1Str})</td><td>${yStr}</td><td>x${i + 2} = ${digitosMedios}</td><td>r${i + 1} = ${r}</td></tr>`;
+
+                x0 = x1;
+                x1 = parseInt(digitosMedios);
+            }
+
+            resultados += "</table>";
+            document.getElementById("resultados").innerHTML = resultados;
+        }
+    </script>
+</body>
+</html>

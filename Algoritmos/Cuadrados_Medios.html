@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Algoritmo de Cuadrados Medios</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Algoritmo de Cuadrados Medios</h1>
+    <label for="semilla">Semilla (separada por comas):</label>
+    <input type="text" id="semilla"><br><br>
+    <label for="interacciones">Número de interacciones:</label>
+    <input type="text" id="interacciones"><br><br>
+    <button onclick="calcularCuadradosMedios()">Calcular</button><br><br>
+    <div id="resultados"></div>
+
+    <script>
+        function calcularCuadradosMedios() {
+            const semillaInput = document.getElementById("semilla").value;
+            const interacciones = parseInt(document.getElementById("interacciones").value);
+            const resultadosDiv = document.getElementById("resultados");
+            resultadosDiv.innerHTML = ""; // Limpiar resultados anteriores
+
+            const semillaArray = semillaInput.split(",").map(Number);
+            const digitosSemilla = semillaArray.length;
+            let semilla = parseInt(semillaArray.join(""));
+
+            let tablaHTML = "<table><tr><th>Y</th><th>(Y)^2</th><th>X</th><th>R</th></tr>";
+
+            for (let i = 0; i < interacciones; i++) {
+                let cuadrado = semilla * semilla;
+                let cuadradoStr = cuadrado.toString();
+
+                // Agregar cero a la izquierda si el resultado tiene una cantidad impar de dígitos
+                if (cuadradoStr.length % 2 !== 0) {
+                    cuadradoStr = "0" + cuadradoStr;
+                }
+
+                const inicio = Math.floor((cuadradoStr.length - digitosSemilla) / 2);
+                const fin = inicio + digitosSemilla;
+                let medio = cuadradoStr.substring(inicio, fin);
+                const medioInt = parseInt(medio);
+                const r = medioInt / Math.pow(10, digitosSemilla);
+
+                // Formatear la semilla para que siempre tenga la longitud correcta
+                const semillaStr = semilla.toString().padStart(digitosSemilla, '0');
+
+                // Formatear r para que tenga la longitud correcta
+                const rStr = r.toFixed(digitosSemilla);
+
+                tablaHTML += `<tr><td>Y${i}=(${semillaStr})</td><td>${cuadradoStr}</td><td>x${i + 1}=${medio}</td><td>r${i + 1}=${rStr}</td></tr>`;
+
+                semilla = medioInt;
+            }
+
+            tablaHTML += "</table>";
+            resultadosDiv.innerHTML = tablaHTML;
+        }
+    </script>
+</body>
+</html>
