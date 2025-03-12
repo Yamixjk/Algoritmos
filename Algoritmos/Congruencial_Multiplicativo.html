@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algoritmo Congruencial Multiplicativo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Algoritmo Congruencial Multiplicativo</h1>
+    <form id="inputForm">
+        <label for="x0">Semilla (X0, impar):</label>
+        <input type="text" id="x0" name="x0" required><br><br>
+
+        <label for="a">Constante Multiplicativa (a):</label>
+        <input type="text" id="a" name="a" required><br><br>
+
+        <label for="m">Módulo (m):</label>
+        <input type="text" id="m" name="m" required><br><br>
+
+        <label for="iterations">Número de Iteraciones:</label>
+        <input type="text" id="iterations" name="iterations" required><br><br>
+
+        <button type="submit">Generar Secuencia</button>
+    </form>
+
+    <h2>Resultados</h2>
+    <table id="resultsTable">
+        <thead>
+            <tr>
+                <th>Iteración</th>
+                <th>Fórmula (X<sub>i</sub>)</th>
+                <th>X<sub>i</sub></th>
+                <th>Fórmula (r<sub>i</sub>)</th>
+                <th>r<sub>i</sub></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById('inputForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            let x0 = parseInt(document.getElementById('x0').value);
+            let a = parseInt(document.getElementById('a').value);
+            let m = parseInt(document.getElementById('m').value);
+            let iterations = parseInt(document.getElementById('iterations').value);
+
+            if (x0 % 2 === 0) {
+                alert("La semilla X0 debe ser un número impar.");
+                return;
+            }
+
+            let tbody = document.querySelector('#resultsTable tbody');
+            tbody.innerHTML = '';
+
+            let xn = x0;
+            for (let i = 0; i < iterations; i++) {
+                let xnPlus1 = (a * xn) % m;
+                let rn = xnPlus1 / (m - 1);
+
+                let row = document.createElement('tr');
+                let iterationCell = document.createElement('td');
+                iterationCell.textContent = i + 1;
+
+                let formulaXiCell = document.createElement('td');
+                formulaXiCell.textContent = `X${i + 1} = (${a} * ${xn}) mod ${m}`;
+
+                let xiCell = document.createElement('td');
+                xiCell.textContent = xnPlus1;
+
+                let formulaRiCell = document.createElement('td');
+                formulaRiCell.textContent = `r${i + 1} = ${xnPlus1} / ${m - 1}`;
+
+                let riCell = document.createElement('td');
+                riCell.textContent = rn.toFixed(4);
+
+                row.appendChild(iterationCell);
+                row.appendChild(formulaXiCell);
+                row.appendChild(xiCell);
+                row.appendChild(formulaRiCell);
+                row.appendChild(riCell);
+                tbody.appendChild(row);
+
+                xn = xnPlus1;
+            }
+        });
+    </script>
+</body>
+</html>
