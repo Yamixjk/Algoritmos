@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Congruencial Aditivo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        h2 {
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-size: 2.5em;
+        }
+        
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #e0e0e0;
+        }
+        
+        input[type="text"], input[type="number"] {
+            padding: 12px;
+            margin: 8px 0;
+            width: 350px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            color: #333;
+        }
+        
+        button {
+            padding: 15px 30px;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        #resultado {
+            margin-top: 30px;
+            width: 90%;
+            max-width: 900px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            text-align: left;
+            line-height: 1.8;
+            color: #e0e0e0;
+            backdrop-filter: blur(10px);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        th {
+            background-color: rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        button {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <h2>Algoritmo Congruencial Aditivo</h2>
+    <label for="secuencia">Secuencia inicial (separada por comas):</label>
+    <input type="text" id="secuencia" placeholder="65,89,98,03,69">
+    <br>
+    <label for="modulo">Valor de m:</label>
+    <input type="number" id="modulo" placeholder="100">
+    <br>
+    <label for="iteraciones">Número de iteraciones:</label>
+    <input type="number" id="iteraciones" placeholder="10">
+    <br>
+    <button onclick="generarNumeros()">Generar</button>
+    <br>
+    <div id="resultado">
+        <h3>Resultados:</h3>
+        <table>
+            <tr>
+                <th>Iteración</th>
+                <th>Fórmula</th>
+                <th>Valor x</th>
+                <th>Valor r</th>
+            </tr>
+        </table>
+    </div>
+    
+    <script>
+        function generarNumeros() {
+            let secuencia = document.getElementById("secuencia").value.split(",").map(num => parseInt(num.trim()));
+            let m = parseInt(document.getElementById("modulo").value);
+            let iteraciones = parseInt(document.getElementById("iteraciones").value);
+            let tabla = document.querySelector("#resultado table");
+            
+            if (secuencia.length < 2 || isNaN(m) || isNaN(iteraciones)) {
+                alert("Por favor, ingrese una secuencia válida, un valor de m y el número de iteraciones.");
+                return;
+            }
+            
+            tabla.innerHTML = `<tr>
+                <th>Iteración</th>
+                <th>Fórmula</th>
+                <th>Valor x</th>
+                <th>Valor r</th>
+            </tr>`;
+            
+            let longitudInicial = secuencia.length;
+            
+            for (let i = 0; i < iteraciones; i++) {
+                let x_n = (secuencia[secuencia.length - 1] + secuencia[0]) % m;
+                let r_n = x_n / (m - 1);
+                let fila = tabla.insertRow();
+                fila.insertCell(0).innerText = `x${longitudInicial + i + 1}`;
+                fila.insertCell(1).innerText = `(x${longitudInicial + i} + x1) mod ${m} (${secuencia[secuencia.length - 1]} + ${secuencia[0]}) mod ${m}`;
+                fila.insertCell(2).innerText = x_n;
+                fila.insertCell(3).innerText = r_n.toFixed(4);
+                
+                secuencia.push(x_n);
+                secuencia.shift();
+            }
+        }
+    </script>
+</body>
+</html>
+
